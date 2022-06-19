@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { DocumentNode, gql, useQuery } from "@apollo/client";
 import Header from '../../components/header'
 import { FC } from "react";
+import Footer from "../../components/footer";
 
 type Props = {
   movieTitle: string;
