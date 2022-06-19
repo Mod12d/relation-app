@@ -21,7 +21,7 @@ export default function Actor() {
   const router = useRouter();
   const { name } = router.query;
   const { loading, error, data } = useQuery(GET_ACTOR, {
-    actorName: name,
+    // actorName: name,
   });
 
   if (loading) return "Loading...";
