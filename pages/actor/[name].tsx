@@ -30,8 +30,8 @@ const Actor: FC<Props> = ({ actorName, GET_ACTOR }) => {
     variables: { actorName: name },
   });
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+  if (loading) return <div>'Loading...'</div>;
+  if (error) return <div>`Error! ${error.message}`</div>;
 
   return (
     <div className="container">
