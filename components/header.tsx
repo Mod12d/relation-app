@@ -1,9 +1,15 @@
-export default function Header({ title }) {
+import { FC } from "react";
+
+type Props = {
+  title?: string | string[];
+};
+
+const Header: FC<Props> = (props) => {
   return (
     <header>
       <h1 className="title">
-        {title ? (
-          <span>{title}</span>
+        {props.title ? (
+          <span>{props.title}</span>
         ) : (
           <span>
             Welcome to <a href="https://nextjs.org">Next.js with Neo4j!</a>
@@ -32,4 +38,6 @@ export default function Header({ title }) {
       `}</style>
     </header>
   );
-}
+};
+
+export default Header;
