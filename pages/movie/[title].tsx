@@ -1,9 +1,10 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { gql, useQuery } from '@apollo/client'
-import Header from '../../components/header'
-import Footer from '../../components/footer'
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
+import Header from "../../components/header";
+import Footer from "../../components/footer";
+import { NextPage } from "next";
 
 const GET_MOVIE = gql`
   query GetMovie($movieTitle: String) {
@@ -19,17 +20,17 @@ const GET_MOVIE = gql`
       }
     }
   }
-`
+`;
 
-export default function Movie() {
-  const router = useRouter()
-  const { title } = router.query
+const Movie: NextPage = () => {
+  const router = useRouter();
+  const { title } = router.query;
   const { loading, error, data } = useQuery(GET_MOVIE, {
-    movieTitle: title,
-  })
+    variables: { movieTitle: title },
+  });
 
-  if (loading) return 'Loading...'
-  if (error) return `Error! ${error.message}`
+  if (loading) return <div>'Loading...'</div>;
+  if (error) return <div>`Error! ${error.message}`</div>;
 
   return (
     <div className="container">
@@ -107,5 +108,7 @@ export default function Movie() {
         `}
       </style>
     </div>
-  )
-}
+  );
+};
+
+export default Movie;

@@ -1,9 +1,10 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { gql, useQuery } from '@apollo/client'
-import Header from '../../components/header'
-import Footer from '../../components/footer'
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
+import Header from "../../components/header";
+import Footer from "../../components/footer";
+import { NextPage } from "next";
 
 const GET_ACTOR = gql`
   query GetActor($actorName: String) {
@@ -15,17 +16,17 @@ const GET_ACTOR = gql`
       }
     }
   }
-`
+`;
 
-export default function Actor() {
-  const router = useRouter()
-  const { name } = router.query
+const Actor: NextPage = () => {
+  const router = useRouter();
+  const { name } = router.query;
   const { loading, error, data } = useQuery(GET_ACTOR, {
-    actorName: name,
-  })
+    variables: { actorName: name },
+  });
 
-  if (loading) return 'Loading...'
-  if (error) return `Error! ${error.message}`
+  if (loading) return <div>'Loading...'</div>;
+  if (error) return <div>`Error! ${error.message}`</div>;
 
   return (
     <div className="container">
@@ -108,5 +109,7 @@ export default function Actor() {
         `}
       </style>
     </div>
-  )
-}
+  );
+};
+
+export default Actor;
