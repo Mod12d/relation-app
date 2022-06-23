@@ -1,15 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { DocumentNode, gql, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
-import { FC } from "react";
-
-type Props = {
-  actorName: string;
-  GET_ACTOR: DocumentNode;
-};
+import { NextPage } from "next";
 
 const GET_ACTOR = gql`
   query GetActor($actorName: String) {
@@ -23,7 +18,7 @@ const GET_ACTOR = gql`
   }
 `;
 
-const Actor: FC<Props> = ({ actorName, GET_ACTOR }) => {
+const Actor: NextPage = () => {
   const router = useRouter();
   const { name } = router.query;
   const { loading, error, data } = useQuery(GET_ACTOR, {

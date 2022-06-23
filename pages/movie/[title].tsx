@@ -1,15 +1,10 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { DocumentNode, gql, useQuery } from "@apollo/client";
-import Header from '../../components/header'
-import { FC } from "react";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
+import Header from "../../components/header";
 import Footer from "../../components/footer";
-
-type Props = {
-  movieTitle: string;
-  GET_MOVIE: DocumentNode;
-};
+import { NextPage } from "next";
 
 const GET_MOVIE = gql`
   query GetMovie($movieTitle: String) {
@@ -25,9 +20,9 @@ const GET_MOVIE = gql`
       }
     }
   }
-`
+`;
 
-const Movie: FC<Props> = ({ movieTitle, GET_MOVIE }) => {
+const Movie: NextPage = () => {
   const router = useRouter();
   const { title } = router.query;
   const { loading, error, data } = useQuery(GET_MOVIE, {
