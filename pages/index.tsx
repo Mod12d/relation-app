@@ -1,8 +1,8 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { gql, useQuery } from '@apollo/client'
-import Header from '../components/header'
-import Footer from '../components/footer'
+import Head from "next/head";
+import Link from "next/link";
+import { gql, useQuery } from "@apollo/client";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 const GET_MOVIES = gql`
   query GetMovies {
@@ -18,13 +18,13 @@ const GET_MOVIES = gql`
       }
     }
   }
-`
+`;
 
 export default function Home() {
-  const { loading, error, data } = useQuery(GET_MOVIES)
+  const { loading, error, data } = useQuery(GET_MOVIES);
 
-  if (loading) return 'Loading...'
-  if (error) return `Error! ${error.message}`
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
 
   return (
     <div className="container">
@@ -38,7 +38,7 @@ export default function Home() {
         <div className="movies">
           <div className="subtitle">
             <p>
-              <strong>"Movies"</strong> Neo4j example dataset.
+              <strong>Movies</strong> Neo4j example dataset.
             </p>
           </div>
           <table>
@@ -152,5 +152,5 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
+  );
 }
