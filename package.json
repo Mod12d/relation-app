@@ -16,7 +16,8 @@
     "neo4j-graphql-js": "^2.17.1",
     "next": "latest",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-force-graph-2d": "^1.23.10"
   },
   "resolutions": {
     "graphql": "^15.0.0"
