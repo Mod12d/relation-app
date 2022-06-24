@@ -1,8 +1,15 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { gql, useQuery } from '@apollo/client'
+import dynamic from 'next/dynamic';
 import Header from '../components/header'
 import Footer from '../components/footer'
+import { useState } from 'react';
+
+
+const NoSSRForceGraph = dynamic(() => import('../lib/NoSSRForceGraph'), {
+  ssr: false
+});
 
 const GET_MOVIES = gql`
   query GetMovies {
@@ -19,9 +26,44 @@ const GET_MOVIES = gql`
     }
   }
 `
+const formatData = (data) => {
+  // this could be generalized but let's leave that for another time
+
+  const nodes = [];
+  const links = [];
+
+  if (!data.getMovies) {
+    return;
+  }
+
+  data.getMovies.forEach((a) => {
+    nodes.push({
+      id: a.id,
+      url: a.url,
+      title: a.title
+    });
+
+    links.push({
+      source: a.actors.name,
+      target: a.id
+    });
+
+  });
+
+  return {
+    // nodes may be duplicated so use lodash's uniqBy to filter out duplicates
+    nodes,
+    links
+  };
+};
 
 export default function Home() {
-  const { loading, error, data } = useQuery(GET_MOVIES)
+  const { loading, error } = useQuery(GET_MOVIES)
+  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+
+  const { data } = useQuery(GET_MOVIES, {
+    onCompleted: (data) => setGraphData(formatData(data))
+  });
 
   if (loading) return 'Loading...'
   if (error) return `Error! ${error.message}`
@@ -32,72 +74,16 @@ export default function Home() {
         <title>Next with Neo4j</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Header />
+     
       <main>
-        <div className="movies">
-          <div className="subtitle">
-            <p>
-              <strong>"Movies"</strong> Neo4j example dataset.
-            </p>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Movie Title</th>
-                <th>Released</th>
-                <th>Tagline</th>
-                <th>Directed</th>
-                <th>Actors</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.getMovies.map((movie, index) => (
-                <tr className="movie" key={movie.title}>
-                  <th>{index + 1}</th>
-                  <td>
-                    <Link
-                      href="/movie/[title]"
-                      as={{
-                        pathname: `/movie/${encodeURIComponent(movie.title)}`,
-                      }}
-                    >
-                      <a className="link">{movie.title}</a>
-                    </Link>
-                  </td>
-                  <td>{movie.released}</td>
-                  <td>{movie.tagline}</td>
-                  <td>
-                    <ul>
-                      {movie.directors.map((director) => (
-                        <li key={director.name}>{director.name}</li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      {movie.actors.map((actor) => (
-                        <li key={actor.name}>
-                          <Link
-                            href="/actor/[name]"
-                            as={{
-                              pathname: `/actor/${encodeURIComponent(
-                                actor.name
-                              )}`,
-                            }}
-                          >
-                            <a className="link">{actor.name}</a>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <NoSSRForceGraph
+      graphData={graphData}
+      nodeLabel={(node) => {
+        return node.title;
+      }}
+      nodeRelSize={8}
+    />       
       </main>
 
       <Footer />
@@ -120,10 +106,6 @@ export default function Home() {
           margin-bottom: 25px;
           text-align: center;
         }
-        .movies {
-          flex: 1;
-          padding: 0 5rem;
-        }
 
         table {
           width: 100%;
@@ -138,13 +120,6 @@ export default function Home() {
           border: 1px solid #dee2e6;
           border-bottom-width: 2px;
           padding: 0.75rem;
-        }
-
-        table tbody th,
-        table tbody td {
-          border: 1px solid #dee2e6;
-          padding: 0.75rem;
-          vertical-align: middle;
         }
 
         .link {

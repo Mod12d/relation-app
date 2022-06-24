@@ -12,7 +12,7 @@ const Header: FC<Props> = (props) => {
           <span>{props.title}</span>
         ) : (
           <span>
-            Welcome to <a href="https://nextjs.org">Next.js with Neo4j!</a>
+            Welcome to CLEAN NETWORK
           </span>
         )}
       </h1>
