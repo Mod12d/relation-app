@@ -1,13 +1,12 @@
-import Head from 'next/head'
-import { gql, useQuery } from '@apollo/client'
-import dynamic from 'next/dynamic';
-import Header from '../components/header'
-import Footer from '../components/footer'
-import { useState } from 'react';
+import Head from "next/head";
+import { gql, useQuery } from "@apollo/client";
+import dynamic from "next/dynamic";
+import Header from "../components/header";
+import Footer from "../components/footer";
+import { useState } from "react";
 
-
-const NoSSRForceGraph = dynamic(() => import('../lib/NoSSRForceGraph'), {
-  ssr: false
+const NoSSRForceGraph = dynamic(() => import("../lib/NoSSRForceGraph"), {
+  ssr: false,
 });
 
 const GET_MOVIES = gql`
@@ -24,7 +23,7 @@ const GET_MOVIES = gql`
       }
     }
   }
-`
+`;
 const formatData = (data) => {
   // this could be generalized but let's leave that for another time
 
@@ -39,29 +38,28 @@ const formatData = (data) => {
     nodes.push({
       id: a.id,
       url: a.url,
-      title: a.title
+      title: a.title,
     });
 
     links.push({
       source: a.actors.name,
-      target: a.id
+      target: a.id,
     });
-
   });
 
   return {
     // nodes may be duplicated so use lodash's uniqBy to filter out duplicates
     nodes,
-    links
+    links,
   };
 };
 
 export default function Home() {
-  const { loading, error } = useQuery(GET_MOVIES)
+  const { loading, error } = useQuery(GET_MOVIES);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
   const { data } = useQuery(GET_MOVIES, {
-    onCompleted: (data) => setGraphData(formatData(data))
+    onCompleted: (data) => setGraphData(formatData(data)),
   });
 
   if (loading) return "Loading...";
@@ -74,15 +72,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-     
+
       <main>
-      <NoSSRForceGraph
-      graphData={graphData}
-      nodeLabel={(node) => {
-        return node.title;
-      }}
-      nodeRelSize={8}
-    />       
+        <NoSSRForceGraph graphData={graphData} nodeRelSize={8} />
       </main>
 
       <Footer />
