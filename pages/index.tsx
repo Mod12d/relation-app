@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import { gql, useQuery } from '@apollo/client'
 import dynamic from 'next/dynamic';
 import Header from '../components/header'
@@ -65,8 +64,8 @@ export default function Home() {
     onCompleted: (data) => setGraphData(formatData(data))
   });
 
-  if (loading) return 'Loading...'
-  if (error) return `Error! ${error.message}`
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
 
   return (
     <div className="container">
@@ -127,5 +126,5 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
+  );
 }
