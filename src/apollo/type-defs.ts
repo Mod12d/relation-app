@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export default gql`
   type Movie {
@@ -20,4 +20,4 @@ export default gql`
     getMovie: Movie
     getActor: Person
   }
-`
+`;
