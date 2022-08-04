@@ -9,18 +9,13 @@ const NoSSRForceGraph = dynamic(() => import("../lib/NoSSRForceGraph"), {
   ssr: false,
 });
 
-const GET_MOVIES = gql`
-  query GetMovies {
-    getMovies {
-      title
-      tagline
-      released
-      actors {
-        name
-      }
-      directors {
-        name
-      }
+const GET_USER = gql`
+  query Query {
+    users {
+      id
+      username
+      name
+      profile_image_url
     }
   }
 `;
@@ -30,20 +25,20 @@ const formatData = (data) => {
   const nodes = [];
   const links = [];
 
-  if (!data.getMovies) {
+  if (!data.users) {
     return;
   }
 
-  data.getMovies.forEach((a) => {
+  data.users.forEach((a) => {
     nodes.push({
       id: a.id,
-      url: a.url,
-      title: a.title,
+      src: a.profile_image_url,
+      name: a.name,
     });
 
     links.push({
-      source: a.actors.name,
-      target: a.id,
+      source: a.id,
+      target: a.id + 1,
     });
   });
 
@@ -55,10 +50,10 @@ const formatData = (data) => {
 };
 
 export default function Home() {
-  const { loading, error } = useQuery(GET_MOVIES);
+  const { loading, error } = useQuery(GET_USER, { variables: { limit: 10 } });
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
-  const { data } = useQuery(GET_MOVIES, {
+  const { data } = useQuery(GET_USER, {
     onCompleted: (data) => setGraphData(formatData(data)),
   });
 
@@ -74,7 +69,21 @@ export default function Home() {
       <Header />
 
       <main>
-        <NoSSRForceGraph graphData={graphData} nodeRelSize={8} />
+        <NoSSRForceGraph
+          graphData={graphData}
+          nodeCanvasObject={(node, ctx, globalScale) => {
+            const size = 12;
+            const img = new Image();
+            // img.src = node.profile_image_url
+            ctx.drawImage(
+              img,
+              node.x - size / 2,
+              node.y - size / 2,
+              size,
+              size
+            );
+          }}
+        />
       </main>
 
       <Footer />
@@ -97,22 +106,6 @@ export default function Home() {
           margin-bottom: 25px;
           text-align: center;
         }
-
-        table {
-          width: 100%;
-          border: 1px solid #dee2e6;
-          border-collapse: collapse;
-          border-spacing: 2px;
-        }
-
-        table thead th {
-          vertical-align: middle;
-          border-bottom: 2px solid #dee2e6;
-          border: 1px solid #dee2e6;
-          border-bottom-width: 2px;
-          padding: 0.75rem;
-        }
-
         .link {
           text-decoration: underline;
         }
