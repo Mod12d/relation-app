@@ -8,6 +8,8 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.9"
 fastapi = "^0.79.0"
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
+py2neo = "^2021.2.3"
+neo4j = "^4.4.5"
 
 [tool.poetry.dev-dependencies]
 
