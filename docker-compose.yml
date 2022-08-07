@@ -10,3 +10,11 @@ services:
       - 57687:7687
     volumes: 
       - ./volumes/neo4j/data:/data
+
+  fastapi:
+    build: .
+    volumes:
+      - .dockervenv:/src/.venv
+      - .:/src
+    ports:
+      - 8000:8000
