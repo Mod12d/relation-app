@@ -9,7 +9,9 @@ python = "^3.9"
 fastapi = "^0.79.0"
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
 py2neo = "^2021.2.3"
-neo4j = "^4.4.5"
+neo4j = "4.4"
+neo4j-backup = "^0.1.0"
+neo4j-driver = "4.4"
 
 [tool.poetry.dev-dependencies]
 
