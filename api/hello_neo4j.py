@@ -95,7 +95,7 @@ if __name__ == "__main__":
     greeter = HelloWorldExample("bolt://localhost:57687", "neo4j", "password")
     greeter.print_greeting("Hello, world")
     greeter.close()
-a
+
     # app = App("bolt://localhost:57687", "neo4j", "password")
     # app.create_friendship("Alice", "David", "School")
     # app.find_person("Alice")
