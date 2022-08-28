@@ -1,3 +1,8 @@
+'''
+fastapiのコードを書いている。
+ここでCRUD操作ができるようにする。
+'''
+
 from fastapi import FastAPI
 
 app = FastAPI()

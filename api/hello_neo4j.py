@@ -1,3 +1,9 @@
+'''
+ホームページにあるテストコードを参考
+https://neo4j.com/docs/api/python-driver/current/
+'''
+
+
 from neo4j import GraphDatabase
 
 class HelloWorldExample:

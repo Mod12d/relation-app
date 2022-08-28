@@ -1,8 +1,11 @@
+'''
+tweepyでデータを取得する
+'''
+
 import tweepy
 from os import getenv
-from hello_neo4j import App
 from dotenv import load_dotenv
-from import_data import session
+from neo4j import GraphDatabase
 
 load_dotenv()
 # 同じフォルダに.envファイルを入れておくと読み込んでくれる。
@@ -41,26 +44,22 @@ def get_follower_profile_image_url(followers):
     return follower_profile_image
 
 
-# descriptions = get_follower_description_list(followers)
-# urls = get_follower_profile_image_url(followers)
+#データの登録をneo4jに行ったところ。
 
 if __name__ == "__main__":
 
-    followers = follower_get("shimabu_it")
-    names = get_follower_name_list(followers)
+    driver = GraphDatabase.driver("bolt://localhost:57687", auth=("neo4j", "password"))
 
-    for name in names:
-        session.run(
-            "CREATE (person:Person {name: $name) RETURN person",
-            name=name)
+    def add_friend(tx, name, friend_name):
+        tx.run("MERGE (a:Person {name: $name}) "
+               "MERGE (friend:Person {name: $friend_name})-[:KNOWS]->(a)",
+               name=name, friend_name=friend_name)
 
-# if __name__ == "__main__":
-#
-#     app = App("bolt://localhost:57687", "neo4j", "password")
-#     follower_list = follower_get("shimabu_it")
-#
-#     for follower in follower_list:
-#         app.create_friendship(follower, "しまぶー", "follow")
-#
-#     app.close()
+    with driver.session() as session:
+        followers = follower_get("shimabu_it")
+        names = get_follower_name_list(followers)
+        for name in names:
+            session.write_transaction(add_friend, "しまぶー", name)
+
+    driver.close()
 

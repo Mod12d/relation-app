@@ -1,3 +1,9 @@
+'''
+参考ファイル
+https://github.com/neo4j-examples/twitter-graph-viz/blob/master/import.py
+最初のところが動くかを確認
+'''
+
 import os
 from neo4j import GraphDatabase, basic_auth
 
