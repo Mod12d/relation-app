@@ -65,14 +65,6 @@ def get_all_information(screen_name):
     df = pd.DataFrame(list(zip(name_list,twitter_id_list)), columns = ['name','twitter_id'])
     return df
 
-# ここからneo4jについて
-# def add_friend(tx, name, friend_name=None):
-#     if not friend_name:
-#         return tx.run('CREATE (p:Person {name: $name})', name=name)
-#
-#     return tx.run('MATCH (p:Person {name: $name})',
-#                   'MEREGE (p) - [:follow] -> (:Person {name: $friend_name})',
-#                   name=name, friend_name=friend_name)
 
 if __name__ == "__main__":
     driver = GraphDatabase.driver("bolt://localhost:57687", auth=("neo4j", "password"))
@@ -83,26 +75,37 @@ if __name__ == "__main__":
                "MERGE (friend:Person {name: $friend_name})-[:follow]->(a)",
                name=name, friend_name=friend_name)
     #
-    screen_name = "blauschwarz32"
+    screen_name = "shimabu_it"
 
     with driver.session() as session:
-        followers = follower_get(screen_name)
-        names = get_follower_screen_name_list(followers)
+        name = []
+        try:
+            followers = follower_get(screen_name)
+            names = get_follower_screen_name_list(followers)
+        except:
+            print("error"+ screen_name)
 
         for follower_name in names:
-            session.write_transaction(add_friend, screen_name, follower_name)
-            print(follower_name)
+            names2 = []
+
+            try:
+                session.write_transaction(add_friend, screen_name, follower_name)
+                # print(follower_name)
+                follower_followers = follower_get(follower_name)
+                names2 = get_follower_screen_name_list(follower_followers)
+                # print(names2)
+            except:
+                # print("error" + follower_name)
 
             # followerのfollowerをとって、登録
 
-            follower_followers = follower_get(follower_name)
-            names2 = get_follower_screen_name_list(follower_followers)
-            print(names2)
-
             for follower_follower_name in names2:
-                session.write_transaction(add_friend, follower_name, follower_follower_name)
-                print(follower_follower_name)
+                try:
+                    session.write_transaction(add_friend, follower_name, follower_follower_name)
+                    # print(follower_follower_name)
+                except:
+                    print("error"+ follower_follower_name)
 
     #
 
-# driver.close()
+    driver.close()
