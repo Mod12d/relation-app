@@ -83,14 +83,26 @@ if __name__ == "__main__":
                "MERGE (friend:Person {name: $friend_name})-[:follow]->(a)",
                name=name, friend_name=friend_name)
     #
-    screen_name = "SunRayOrange"
+    screen_name = "blauschwarz32"
 
     with driver.session() as session:
         followers = follower_get(screen_name)
         names = get_follower_screen_name_list(followers)
-        for name in names:
-            session.write_transaction(add_friend, "Sweet Orange 🍊橙果🍊🐈", name)
-            print(name)
-    #
-    driver.close()
 
+        for follower_name in names:
+            session.write_transaction(add_friend, screen_name, follower_name)
+            print(follower_name)
+
+            # followerのfollowerをとって、登録
+
+            follower_followers = follower_get(follower_name)
+            names2 = get_follower_screen_name_list(follower_followers)
+            print(names2)
+
+            for follower_follower_name in names2:
+                session.write_transaction(add_friend, follower_name, follower_follower_name)
+                print(follower_follower_name)
+
+    #
+
+# driver.close()
