@@ -31,14 +31,13 @@ const formatData = (data) => {
 
   data.users.forEach((a) => {
     nodes.push({
-      id: a.id,
-      src: a.profile_image_url,
-      name: a.name,
+      source: a.name,
+      // name: a.name,
     });
 
     links.push({
-      source: a.id,
-      target: a.id + 1,
+      // source: a.name,
+      target: a.id,
     });
   });
 
@@ -50,7 +49,7 @@ const formatData = (data) => {
 };
 
 export default function Home() {
-  const { loading, error } = useQuery(GET_USER, { variables: { limit: 10 } });
+  const { loading, error } = useQuery(GET_USER);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
   const { data } = useQuery(GET_USER, {
@@ -71,6 +70,7 @@ export default function Home() {
       <main>
         <NoSSRForceGraph
           graphData={graphData}
+          /*
           nodeCanvasObject={(node, ctx, globalScale) => {
             const size = 12;
             const img = new Image();
@@ -82,7 +82,8 @@ export default function Home() {
               size,
               size
             );
-          }}
+          }
+        }*/
         />
       </main>
 
