@@ -4,6 +4,16 @@ import dynamic from "next/dynamic";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { useState } from "react";
+import User from "../apollo/type-defs";
+
+import { NodeObject, LinkObject } from "react-force-graph-2d";
+
+type UserNode = NodeObject & {
+  name?: string;
+  imgUrl?: string;
+  imgLoaded?: boolean;
+  img?: HTMLImageElement;
+};
 
 const NoSSRForceGraph = dynamic(() => import("../lib/NoSSRForceGraph"), {
   ssr: false,
@@ -22,8 +32,8 @@ const GET_USER = gql`
 const formatData = (data) => {
   // this could be generalized but let's leave that for another time
 
-  const nodes = [];
-  const links = [];
+  const nodes: UserNode[] = [];
+  const links: LinkObject[] = [];
 
   if (!data.users) {
     return;
@@ -31,16 +41,17 @@ const formatData = (data) => {
 
   data.users.forEach((a) => {
     nodes.push({
-      source: a.name,
-      // name: a.name,
-    });
-
-    links.push({
-      // source: a.name,
-      target: a.id,
+      id: a?.id,
+      name: a?.name,
+      imgUrl: a?.profile_image_url,
     });
   });
-
+  for (let i = 1; i < data.users.length; i++) {
+    links.push({
+      source: data.users[i - 1]?.id,
+      target: data.users[i]?.id,
+    });
+  }
   return {
     // nodes may be duplicated so use lodash's uniqBy to filter out duplicates
     nodes,
@@ -52,7 +63,7 @@ export default function Home() {
   const { loading, error } = useQuery(GET_USER);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
-  const { data } = useQuery(GET_USER, {
+  useQuery(GET_USER, {
     onCompleted: (data) => setGraphData(formatData(data)),
   });
 
@@ -68,13 +79,17 @@ export default function Home() {
       <Header />
 
       <main>
+        <div></div>
         <NoSSRForceGraph
+          nodeAutoColorBy={"__typename"}
+          nodeLabel={"id"}
+          width={1000}
+          height={400}
           graphData={graphData}
-          /*
-          nodeCanvasObject={(node, ctx, globalScale) => {
+          nodeCanvasObject={(node: UserNode, ctx) => {
             const size = 12;
             const img = new Image();
-            // img.src = node.profile_image_url
+            img.src = node.imgUrl;
             ctx.drawImage(
               img,
               node.x - size / 2,
@@ -82,8 +97,7 @@ export default function Home() {
               size,
               size
             );
-          }
-        }*/
+          }}
         />
       </main>
 
@@ -106,6 +120,9 @@ export default function Home() {
         .subtitle {
           margin-bottom: 25px;
           text-align: center;
+        }
+        .link {
+          text-decoration: underline;
         }
         .link {
           text-decoration: underline;
