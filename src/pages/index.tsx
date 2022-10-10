@@ -124,9 +124,6 @@ export default function Home() {
         .link {
           text-decoration: underline;
         }
-        .link {
-          text-decoration: underline;
-        }
       `}</style>
     </div>
   );
