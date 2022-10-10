@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer>
@@ -40,5 +42,5 @@ export default function Footer() {
         `}
       </style>
     </footer>
-  )
+  );
 }

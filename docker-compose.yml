@@ -1,0 +1,12 @@
+# docker-compose up -d       
+version: '3'
+
+services: 
+  neo4j:
+    image: neo4j
+    restart: always
+    ports: 
+      - 57474:7474
+      - 57687:7687
+    volumes: 
+      - ./volumes/neo4j/data:/data
