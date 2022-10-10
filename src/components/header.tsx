@@ -11,9 +11,7 @@ const Header: FC<Props> = (props) => {
         {props.title ? (
           <span>{props.title}</span>
         ) : (
-          <span>
-            Welcome to CLEAN NETWORK
-          </span>
+          <span>Welcome to CLEAN NETWORK</span>
         )}
       </h1>
 

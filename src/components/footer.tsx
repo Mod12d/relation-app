@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer>
@@ -6,7 +8,14 @@ export default function Footer() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Powered by <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
+        Powered by{" "}
+        <Image
+          src="/vercel.svg"
+          alt="Vercel Logo"
+          className="logo"
+          width={5}
+          height={5}
+        />
       </a>
 
       <style jsx>
@@ -33,5 +42,5 @@ export default function Footer() {
         `}
       </style>
     </footer>
-  )
+  );
 }

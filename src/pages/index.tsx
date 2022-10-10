@@ -4,49 +4,54 @@ import dynamic from "next/dynamic";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { useState } from "react";
+import User from "../apollo/type-defs";
+
+import { NodeObject, LinkObject } from "react-force-graph-2d";
+
+type UserNode = NodeObject & {
+  name?: string;
+  imgUrl?: string;
+  imgLoaded?: boolean;
+  img?: HTMLImageElement;
+};
 
 const NoSSRForceGraph = dynamic(() => import("../lib/NoSSRForceGraph"), {
   ssr: false,
 });
 
-const GET_MOVIES = gql`
-  query GetMovies {
-    getMovies {
-      title
-      tagline
-      released
-      actors {
-        name
-      }
-      directors {
-        name
-      }
+const GET_USER = gql`
+  query Query {
+    users {
+      id
+      username
+      name
+      profile_image_url
     }
   }
 `;
 const formatData = (data) => {
   // this could be generalized but let's leave that for another time
 
-  const nodes = [];
-  const links = [];
+  const nodes: UserNode[] = [];
+  const links: LinkObject[] = [];
 
-  if (!data.getMovies) {
+  if (!data.users) {
     return;
   }
 
-  data.getMovies.forEach((a) => {
+  data.users.forEach((a) => {
     nodes.push({
-      id: a.id,
-      url: a.url,
-      title: a.title,
-    });
-
-    links.push({
-      source: a.actors.name,
-      target: a.id,
+      id: a?.id,
+      name: a?.name,
+      imgUrl: a?.profile_image_url,
     });
   });
-
+  for (let i = 1; i < data.users.length; i++) {
+    links.push({
+      source: data.users[i - 1]?.id,
+      target: data.users[i]?.id,
+    });
+  }
   return {
     // nodes may be duplicated so use lodash's uniqBy to filter out duplicates
     nodes,
@@ -55,10 +60,10 @@ const formatData = (data) => {
 };
 
 export default function Home() {
-  const { loading, error } = useQuery(GET_MOVIES);
+  const { loading, error } = useQuery(GET_USER);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
-  const { data } = useQuery(GET_MOVIES, {
+  useQuery(GET_USER, {
     onCompleted: (data) => setGraphData(formatData(data)),
   });
 
@@ -74,7 +79,26 @@ export default function Home() {
       <Header />
 
       <main>
-        <NoSSRForceGraph graphData={graphData} nodeRelSize={8} />
+        <div></div>
+        <NoSSRForceGraph
+          nodeAutoColorBy={"__typename"}
+          nodeLabel={"id"}
+          width={1000}
+          height={400}
+          graphData={graphData}
+          nodeCanvasObject={(node: UserNode, ctx) => {
+            const size = 12;
+            const img = new Image();
+            img.src = node.imgUrl;
+            ctx.drawImage(
+              img,
+              node.x - size / 2,
+              node.y - size / 2,
+              size,
+              size
+            );
+          }}
+        />
       </main>
 
       <Footer />
@@ -97,22 +121,6 @@ export default function Home() {
           margin-bottom: 25px;
           text-align: center;
         }
-
-        table {
-          width: 100%;
-          border: 1px solid #dee2e6;
-          border-collapse: collapse;
-          border-spacing: 2px;
-        }
-
-        table thead th {
-          vertical-align: middle;
-          border-bottom: 2px solid #dee2e6;
-          border: 1px solid #dee2e6;
-          border-bottom-width: 2px;
-          padding: 0.75rem;
-        }
-
         .link {
           text-decoration: underline;
         }
