@@ -1,12 +1,11 @@
 import Head from "next/head";
 import { gql, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
-import Header from "../components/header";
-import Footer from "../components/footer";
 import { useState } from "react";
 import User from "../apollo/type-defs";
 
 import { NodeObject, LinkObject } from "react-force-graph-2d";
+import { Layout } from "../layout";
 
 type UserNode = NodeObject & {
   name?: string;
@@ -76,32 +75,30 @@ export default function Home() {
         <title>Next with Neo4j</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
-
-      <main>
-        <div></div>
-        <NoSSRForceGraph
-          nodeAutoColorBy={"__typename"}
-          nodeLabel={"id"}
-          width={1000}
-          height={400}
-          graphData={graphData}
-          nodeCanvasObject={(node: UserNode, ctx) => {
-            const size = 12;
-            const img = new Image();
-            img.src = node.imgUrl;
-            ctx.drawImage(
-              img,
-              node.x - size / 2,
-              node.y - size / 2,
-              size,
-              size
-            );
-          }}
-        />
-      </main>
-
-      <Footer />
+      <Layout>
+        <main>
+          <div></div>
+          <NoSSRForceGraph
+            nodeAutoColorBy={"__typename"}
+            nodeLabel={"id"}
+            width={1000}
+            height={400}
+            graphData={graphData}
+            nodeCanvasObject={(node: UserNode, ctx) => {
+              const size = 12;
+              const img = new Image();
+              img.src = node.imgUrl;
+              ctx.drawImage(
+                img,
+                node.x - size / 2,
+                node.y - size / 2,
+                size,
+                size
+              );
+            }}
+          />
+        </main>
+      </Layout>
 
       <style jsx>{`
         .container {
