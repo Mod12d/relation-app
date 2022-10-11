@@ -1,46 +1,18 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Footer() {
+export const Footer = () => {
   return (
-    <footer>
-      <a
-        href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by{" "}
-        <Image
-          src="/vercel.svg"
-          alt="Vercel Logo"
-          className="logo"
-          width={5}
-          height={5}
-        />
-      </a>
-
-      <style jsx>
-        {`
-          footer {
-            width: 100%;
-            height: 100px;
-            border-top: 1px solid #eaeaea;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          footer img {
-            margin-left: 0.5rem;
-          }
-          footer a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          .logo {
-            height: 1em;
-          }
-        `}
-      </style>
-    </footer>
+    <div className="my-4 flex max-h-6 justify-around font-mono text-sm sm:my-12">
+      <Link href={"/"}>
+        <a className="whitespace-nowrap bg-gradient-to-r from-green-900 to-violet-900 bg-clip-text  text-transparent">
+          {`© ${new Date().getFullYear()}`} グラフ管理アプリ
+        </a>
+      </Link>
+      <Link href={"/policy"}>
+        <a className="whitespace-nowrap bg-gradient-to-r from-green-600 to-violet-900 bg-clip-text font-mono text-sm text-transparent">
+          policy / privacy
+        </a>
+      </Link>
+    </div>
   );
-}
+};

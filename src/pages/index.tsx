@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Head from "next/head";
 import { gql, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
@@ -70,58 +71,34 @@ export default function Home() {
   if (error) return `Error! ${error.message}`;
 
   return (
-    <div className="container">
+    <Layout>
       <Head>
         <title>Next with Neo4j</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        <main>
-          <div></div>
-          <NoSSRForceGraph
-            nodeAutoColorBy={"__typename"}
-            nodeLabel={"id"}
-            width={1000}
-            height={400}
-            graphData={graphData}
-            nodeCanvasObject={(node: UserNode, ctx) => {
-              const size = 12;
-              const img = new Image();
-              img.src = node.imgUrl;
-              ctx.drawImage(
-                img,
-                node.x - size / 2,
-                node.y - size / 2,
-                size,
-                size
-              );
-            }}
-          />
-        </main>
-      </Layout>
 
-      <style jsx>{`
-        .container {
-          width: 100vw;
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        main {
-          display: flex;
-          width: 100%;
-        }
-        .subtitle {
-          margin-bottom: 25px;
-          text-align: center;
-        }
-        .link {
-          text-decoration: underline;
-        }
-      `}</style>
-    </div>
+      <main className="mx-auto">
+        <div></div>
+        <NoSSRForceGraph
+          nodeAutoColorBy={"__typename"}
+          nodeLabel={"id"}
+          width={1000}
+          height={400}
+          graphData={graphData}
+          nodeCanvasObject={(node: UserNode, ctx) => {
+            const size = 12;
+            const img = new Image();
+            img.src = node.imgUrl;
+            ctx.drawImage(
+              img,
+              node.x - size / 2,
+              node.y - size / 2,
+              size,
+              size
+            );
+          }}
+        />
+      </main>
+    </Layout>
   );
 }
