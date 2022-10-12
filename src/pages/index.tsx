@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Head from "next/head";
 import { gql, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import User from "../apollo/type-defs";
 
 import { NodeObject, LinkObject } from "react-force-graph-2d";
 import { Layout } from "../layout";

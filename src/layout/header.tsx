@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { CSSProperties } from "react";
-import { UserIcon } from "../components/atoms";
+import { SigninPopover } from "../components/auth";
 
 type Props = {
   inView: boolean;
@@ -22,7 +21,7 @@ export const Header = ({ inView }: Props) => {
           </span>
         </Link>
         <div className="flex leading-6">
-          <UserIcon />
+          <SigninPopover />
         </div>
       </div>
     </div>
