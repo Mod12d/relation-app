@@ -2,6 +2,8 @@ import Head from "next/head";
 import { gql, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import Axios from "axios";
+
 
 import { NodeObject, LinkObject } from "react-force-graph-2d";
 import { Layout } from "../layout";
@@ -12,6 +14,12 @@ type UserNode = NodeObject & {
   imgLoaded?: boolean;
   img?: HTMLImageElement;
 };
+function handleApi() {
+  //console.log("input text >>"+text)
+  Axios.get("http://localhost:8000/hello", {}).then(function (res) {
+    alert(res.data.message);
+  });
+}
 
 const NoSSRForceGraph = dynamic(() => import("../lib/NoSSRForceGraph"), {
   ssr: false,
@@ -83,6 +91,7 @@ export default function Home() {
           width={1000}
           height={400}
           graphData={graphData}
+          onNodeClick={handleApi}
           nodeCanvasObject={(node: UserNode, ctx) => {
             const size = 12;
             const img = new Image();
