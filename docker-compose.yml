@@ -12,7 +12,9 @@ services:
       - ./volumes/neo4j/data:/data
 
   fastapi:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .dockervenv:/src/.venv
       - .:/src
